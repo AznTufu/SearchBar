@@ -2,12 +2,14 @@ import { useState } from 'react';
 import axios from 'axios';
 
 const App = () => {
+  // Déclaration d'états et de fonctions de mise à jour d'états
   const [searchInput, setSearchInput] = useState('');
-  const [selectedCity, setSelectedCity] = useState('');
   const [popularCities, setPopularCities] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
   const [popularFrom, setPopularFrom] = useState([]);
 
+  // Déclaration de fonctions
+  // Fonctions asynchrone qui récupère des données avec axios en effectuant une requête GET vers l'url spécifiée et update l'état correspondant dans la fonction de mise à jour d'état
   const fetchPopularCities = async () => {
     try {
       const response = await axios.get(
@@ -30,6 +32,7 @@ const App = () => {
     }
   };
 
+  // Fonctions de gestion d'événements
   const handlePopularClick = () => {
     fetchPopularCities();
   };
@@ -39,11 +42,11 @@ const App = () => {
     searchCities();
   };
 
-  const handleCityFrom = (city) => {
-    setSelectedCity(city);
-    fetchPopularFrom(city);
+  const handleCityFrom = async (city) => {
+    await fetchPopularFrom(city);
   };
 
+  // Fonction asynchrone qui récupère des données avec axios en effectuant une requête GET vers l'url spécifiée et update l'état correspondant dans la fonction de mise à jour d'état
   const fetchPopularFrom = async (city) => {
     try {
       const response = await axios.get(
@@ -55,22 +58,32 @@ const App = () => {
     }
   };
 
+  // La fonction handleInputBlur est appelée lorsque l'utilisateur quitte l'un des inputs. Rénitialise les états correspondants
+  const handleInputBlur = () => {
+    setPopularCities([]);
+    setSearchResults([]);
+    setPopularFrom([]);
+  };
+
   return (
     <div>
       <input
         type="text"
         placeholder="Rechercher parmi les villes populaires"
         onClick={handlePopularClick}
+        onBlur={handleInputBlur}
       />
       <input
         type="text"
         placeholder="Rechercher une ville"
         onChange={handleInputChange}
+        onBlur={handleInputBlur}
       />
       <input
         type="text"
         placeholder="Rechercher les villes populaires au départ d'une ville"
         onClick={() => handleCityFrom(searchInput)}
+        onBlur={handleInputBlur}
       />
 
       {popularCities.length > 0 && (
@@ -97,9 +110,9 @@ const App = () => {
         </div>
       )}
 
-      {selectedCity && popularFrom.length > 0 && (
+      {popularFrom.length > 0 && (
         <div>
-          <h2>Villes populaires au départ de {selectedCity} :</h2>
+          <h2>Villes populaires au départ de {searchInput} :</h2>
           <ul>
             {popularFrom.map((city, i) => (
               <li key={i}>{JSON.stringify(city.local_name)}</li>
