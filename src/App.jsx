@@ -8,7 +8,9 @@ const App = () => {
   const [popularCities, setPopularCities] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
   const [popularFrom, setPopularFrom] = useState([]);
-
+  const [bgColor, setBgColor] = useState('#DCDFE9');
+  const [justify, setJustify] = useState('start');
+  
   // Déclaration de fonctions
   // Fonctions asynchrone qui récupère des données avec axios en effectuant une requête GET vers l'url spécifiée et update l'état correspondant dans la fonction de mise à jour d'état
   const fetchPopularCities = async () => {
@@ -64,6 +66,11 @@ const App = () => {
     setPopularCities([]);
     setSearchResults([]);
     setPopularFrom([]);
+  };
+
+  // Si bgColor est égal à #DCDFE9, alors on update bgColor à #5E90CC et justify à end, sinon on update bgColor à #DCDFE9 et justify à start
+  const handleClick = () => {
+    (bgColor === '#DCDFE9') ? (setBgColor('#5E90CC'), setJustify('end')) : (setBgColor('#DCDFE9'), setJustify('start'));
   };
 
   return (
@@ -172,8 +179,8 @@ const App = () => {
         </div>
         {/* End Search section */}
         {/* Accommodation section */}
-        <div className="flex p-4 gap-2">
-          <div className="flex items-center w-9 h-5 bg-[#5E90CC] rounded-[30px] p-1"> <div className="bg-white rounded-full w-4 h-4"/> </div>
+        <div className="flex items-center p-4 gap-2">
+          <div onClick={handleClick} className={`flex justify-${justify} items-center w-9 h-5 bg-[${bgColor}] rounded-[30px] p-[2px] transition-all`}> <div className="bg-white rounded-full w-4 h-4"/> </div>
           <div>Find my accommodation</div>
         </div>
         {/* End Accommodation section */}
